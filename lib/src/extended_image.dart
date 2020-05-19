@@ -995,16 +995,7 @@ class _ExtendedImageState extends State<ExtendedImage>
   }
 
   Widget _getIndicator(BuildContext context) {
-    return Theme.of(context).platform == TargetPlatform.iOS
-        ? const CupertinoActivityIndicator(
-            animating: true,
-            radius: 16.0,
-          )
-        : CircularProgressIndicator(
-            strokeWidth: 2.0,
-            valueColor:
-                AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
-          );
+    return Container(height: widget.height,width: widget.width,color: Color(0xfff2f2f2),);
   }
 
   Widget _buildExtendedRawImage() {

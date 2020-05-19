@@ -55,6 +55,8 @@ class ExtendedImage extends StatefulWidget {
     this.initEditorConfigHandler,
     this.heroBuilderForSlidingPage,
     this.clearMemoryCacheWhenDispose = false,
+    this.loadingWidget,
+    this.failWidget,
   })  : assert(image != null),
         assert(constraints == null || constraints.debugAssertIsValid()),
         constraints = (width != null || height != null)
@@ -108,6 +110,8 @@ class ExtendedImage extends StatefulWidget {
     this.heroBuilderForSlidingPage,
     this.clearMemoryCacheWhenDispose = false,
     this.handleLoadingProgress = false,
+    this.loadingWidget,
+    this.failWidget,
   })  :
         //assert(autoCancel != null),
         image = ExtendedNetworkImageProvider(url,
@@ -180,6 +184,8 @@ class ExtendedImage extends StatefulWidget {
     this.initEditorConfigHandler,
     this.heroBuilderForSlidingPage,
     this.clearMemoryCacheWhenDispose = false,
+    this.loadingWidget,
+    this.failWidget,
   })  : image = ExtendedFileImageProvider(file, scale: scale),
         assert(alignment != null),
         assert(repeat != null),
@@ -355,6 +361,8 @@ class ExtendedImage extends StatefulWidget {
     this.initEditorConfigHandler,
     this.heroBuilderForSlidingPage,
     this.clearMemoryCacheWhenDispose = false,
+    this.loadingWidget,
+    this.failWidget,
   })  : image = scale != null
             ? ExtendedExactAssetImageProvider(name,
                 bundle: bundle, scale: scale, package: package)
@@ -421,6 +429,8 @@ class ExtendedImage extends StatefulWidget {
     this.initEditorConfigHandler,
     this.heroBuilderForSlidingPage,
     this.clearMemoryCacheWhenDispose = false,
+    this.loadingWidget,
+    this.failWidget,
   })  : image = ExtendedMemoryImageProvider(bytes, scale: scale),
         assert(alignment != null),
         assert(repeat != null),
@@ -646,6 +656,11 @@ class ExtendedImage extends StatefulWidget {
   /// Useful for images which do not contribute meaningful information to an
   /// application.
   final bool excludeFromSemantics;
+
+  /// 加载中和加载失败占位
+  final Widget loadingWidget;
+
+  final Widget failWidget;
 
   @override
   _ExtendedImageState createState() => _ExtendedImageState();
@@ -910,7 +925,7 @@ class _ExtendedImageState extends State<ExtendedImage>
                 onTap: () {
                   reLoadImage();
                 },
-                child: const Text('Failed to load image'),
+                child: widget.failWidget ?? Container(color: const Color(0xfff2f2f2)),
               ),
             );
             break;
@@ -995,7 +1010,11 @@ class _ExtendedImageState extends State<ExtendedImage>
   }
 
   Widget _getIndicator(BuildContext context) {
-    return Container(height: widget.height,width: widget.width,color: Color(0xfff2f2f2),);
+    return Container(
+      child: widget.loadingWidget ?? Container(color: const Color(0xfff2f2f2)),
+      height: widget.height,
+      width: widget.width,
+    );
   }
 
   Widget _buildExtendedRawImage() {
